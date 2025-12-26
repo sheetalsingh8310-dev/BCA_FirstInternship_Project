@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>user_home</title>
+  {% include 'medi_app/common/common_css.html' %}
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: sans-serif;
+      background: url("{% static 'medi_app/images/l.jpeg' %}") no-repeat center center fixed;
+      background-size: cover;
+    }
+
+    .feedback-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      padding: 20px;
+      background: rgba(0,0,0,0.3);
+    }
+
+    .table {
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(12px) saturate(180%);
+      -webkit-backdrop-filter: blur(12px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+      animation: fadeInUp 0.8s ease-out;
+    }
+
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 40px;
+      background: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    .navbar .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #2a2a2a;
+    }
+    .navbar nav {
+      display: flex;
+      gap: 28px;
+    }
+    .navbar nav a {
+      font-size: 1rem;
+      color: #444;
+      padding: 8px 0;
+      transition: color 0.2s;
+    }
+    .navbar nav a:hover {
+      color: #6c63ff;
+    }
+    a {
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body style="background-color:white">
+  <div class="main-div">
+    <header class="navbar">
+      <div class="logo">MediLocator</div>
+      <nav>
+        <a href="/">Home</a>
+        <a href="/user_feedback/">FeedBack</a>
+        {% comment %} <a href="/view_map/">view map</a> {% endcomment %}
+        <a href="/medicine_request/">Medicine Request</a>
+        <a href="/user_edit_profile/">User edit profile</a>
+        <a href="/update_request/">update Request</a>
+        <a href="/user_logout/">Logout</a>
+      </nav>
+    </header>
+
+    <!-- Modal for Django Messages -->
+    <div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="messageModalLabel">Alert</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            {% if messages %}
+              {% for m in messages %}
+                <div>{{ m }}</div>
+              {% endfor %}
+            {% endif %}
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="feedback-wrapper">
+      <table class="table" style="margin-top:-200px;">
+        <thead>
+          <tr>
+            <th scope="col">Email</th>
+            <th scope="col">Whatsapp</th>
+            <th scope="col">Medicine Name</th>
+            <th scope="col">Refer Doctor</th>
+            <th scope="col">Messages</th>
+            <th scope="col">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in medicine_detail %}
+            <tr>
+              <th>{{ r.user_email }}</th>
+              <th>{{ r.user_whatsapp }}</th>
+              <th>{{ r.medicine_name }}</th>
+              <th>{{ r.refer_doctor_name }}</th>
+              <th>{{ r.user_message }}</th>
+              <th>{{ r.medicine_status }}</th>
+              {% if r.medicine_status == 'REQUESTED' %}
+                <th><a href="/update_status/{{r.id}}" class="btn btn-primary">update Status</a></th>
+              {% endif %}
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  {% include 'medi_app/common/footer.html' %}
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
+    crossorigin="anonymous"></script>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', function () {
+      {% if messages %}
+        var myModal = new bootstrap.Modal(document.getElementById('messageModal'));
+        myModal.show();
+      {% endif %}
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Feedback Form</title>
+    {% include 'medi_app/common/common_css.html' %}
+    <style>
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        font-family: sans-serif;
+        background: url("{% static 'medi_app/images/l.jpeg' %}") no-repeat
+          center center fixed;
+        background-size: cover;
+      }
+
+      /* Glassmorphism effect */
+      .feedback-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 600px;
+        padding: 20px;
+        background: rgba(0, 0, 0, 0.3);
+      }
+
+      .feedback-box {
+        width: 446px;
+        height: 490px;
+        padding: 30px;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(12px) saturate(180%);
+        -webkit-backdrop-filter: blur(12px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      }
+
+      .feedback-box h1 {
+        text-align: center;
+        margin-bottom: -2px;
+        font-size: 2em;
+        color: #fff;
+        margin-top: -20px;
+      }
+
+      .feedback-box .form-control,
+      .feedback-box .form-select,
+      .feedback-box textarea {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 5px;
+        background: rgba(255, 255, 255, 0.6);
+        border: none;
+        border-radius: 8px;
+        color: #111;
+        font-size: 1em;
+      }
+
+      .feedback-box input[type="submit"] {
+        width: 100%;
+        padding: 12px;
+        background: #ff7e5f;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1em;
+        cursor: pointer;
+        transition: background 0.3s, transform 0.2s;
+      }
+
+      .feedback-box input[type="submit"]:hover {
+        background: #eb6750;
+        transform: translateY(-2px);
+      }
+
+      @media (max-width: 500px) {
+        .feedback-box {
+          margin: 0 10px;
+          padding: 20px;
+        }
+      }
+
+      .alert-fixed-top {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 2000;
+        width: 90%;
+        max-width: 600px;
+      }
+      a {
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-light blue sticky-top">
+      <header class="navbar container">
+        <div
+          style="
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #007bff;
+            cursor: pointer;
+          "
+        >
+          MediLocator
+        </div>
+        <nav style="display: flex; gap: 1.5rem">
+          <a href="/">Home</a>
+          <a href="/shop_detail/">Add Shop details</a>
+          <a href="/view_medicine/">View medicine request</a>
+          <a href="/owner_edit_profile/">Edit profile</a>
+          <a href="/owner_logout/">Logout</a>
+        </nav>
+        <button
+          class="navbar-toggler"
+          type="button"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      </header>
+    </nav>
+
+    {% if messages %} {% for m in messages %}
+    <div
+      class="alert alert-danger alert-dismissible fade show alert-fixed-top text-center"
+      role="alert"
+    >
+      <strong>{{ m }}</strong>
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      ></button>
+    </div>
+    {% endfor %} {% endif %}
+
+    <div class="feedback-wrapper">
+      <div class="feedback-box">
+        <h1>Shop detail</h1>
+        <form
+          method="post"
+          action="/shop_detail/"
+          enctype="multipart/form-data"
+        >
+          {% csrf_token %}
+          <input
+            type="text"
+            name="shop_name"
+            class="form-control"
+            placeholder="Shop Name"
+            required
+          />
+          <input
+            type="number"
+            name="gst_number"
+            class="form-control"
+            placeholder="GST number"
+            required
+          />
+          <textarea
+            name="description"
+            class="form-control"
+            rows="4"
+            placeholder="Description..."
+            required
+          ></textarea>
+          <!-- Phone / Mobile number field with validation -->
+          <input
+            type="tel"
+            name="phone_no"
+            class="form-control"
+            placeholder="Phone Number (e.g. +91 9876543210)"
+            required
+            pattern="\+?[0-9]{10}"
+            title="Enter a valid 10-digit phone number, optionally starting with +"
+          />
+
+          <input
+            type="text"
+            name="city"
+            class="form-control"
+            placeholder="City"
+            required
+          />
+          <input
+            type="text"
+            name="address"
+            class="form-control"
+            placeholder="Address"
+            required
+          />
+          <input type="submit" value="Submit" />
+        </form>
+      </div>
+    </div>
+
+    {% include 'medi_app/common/footer.html' %}
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

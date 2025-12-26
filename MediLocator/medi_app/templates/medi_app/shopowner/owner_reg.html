@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Owner Registration — MediLocator</title>
+    {% include 'medi_app/common/common_css.html' %}
+    <style>
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        font-family: sans-serif;
+        /* Apply background image */
+        background: url("{% static 'medi_app/images/l.jpeg' %}") no-repeat
+          center center fixed;
+        background-size: cover;
+      }
+
+      /* Glassmorphism effect */
+      .feedback-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        padding: 20px;
+        background: rgba(0, 0, 0, 0.3); /* optional dark layer for contrast */
+      }
+
+      .feedback-box {
+        width: 35%;
+        height: auto;
+        margin-top: -10px;
+        margin-left: -5%;
+        padding: 30px 20px;
+        border-radius: 20px;
+        backdrop-filter: blur(15px) saturate(180%);
+        -webkit-backdrop-filter: blur(15px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        animation: fadeInUp 0.8s ease-out;
+        text-align: center;
+        background: rgba(255,255,255,0.06);
+      }
+
+      .feedback-box h1 {
+        text-align: center;
+        margin-top: -10px;
+        font-size: 2em;
+      }
+
+      .feedback-box .form-control,
+      .feedback-box .form-select,
+      .feedback-box textarea {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 15px;
+        border-radius: 8px;
+        color: #111;
+        font-size: 1em;
+      }
+
+      .feedback-box input[type="submit"] {
+        width: 100%;
+        padding: 12px;
+        background: #ff7e5f;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1em;
+        cursor: pointer;
+        transition: background 0.3s, transform 0.2s;
+      }
+
+      .feedback-box input[type="submit"]:hover {
+        background: #eb6750;
+        transform: translateY(-2px);
+      }
+
+      @media (max-width: 900px) {
+        .feedback-box { width: 85%; margin-left: 0; }
+      }
+
+      @media (max-width: 500px) {
+        .feedback-box {
+          margin: 0 10px;
+          padding: 20px;
+        }
+      }
+      a {
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-light blue sticky-top">
+      <header class="navbar container">
+        <div
+          style="
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #007bff; /* blue accent */
+            cursor: pointer;
+            transition: transform 0.3s;
+          "
+        >
+          MediLocator
+        </div>
+        <nav style="display: flex; gap: 1.5rem">
+          <a href="/">Home</a>
+        </nav>
+
+        <button
+          class="navbar-toggler"
+          type="button"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      </header>
+    </nav>
+    {% comment %} {% include 'medi_app/common/header.html' %} {% endcomment %}
+
+    <div class="feedback-wrapper">
+      <div class="feedback-box">
+        <h1> Owner Registration</h1>
+        <form
+          method="post"
+          action="/owner_reg/"
+          id="registrationForm"
+          enctype="multipart/form-data"
+          novalidate
+        >
+          {% csrf_token %}
+
+          <input
+            type="text"
+            name="name"
+            class="form-control"
+            placeholder="Enter Your Name"
+            required
+            aria-label="Name"
+          />
+          <input
+            type="email"
+            name="email"
+            class="form-control"
+            placeholder="Email"
+            required
+            aria-label="Email"
+          />
+          <input
+            type="password"
+            name="password"
+            class="form-control"
+            placeholder="Password (min 6 chars)"
+            required
+            aria-label="Password"
+          />
+          <input
+            type="tel"
+            name="phone"
+            class="form-control"
+            placeholder="Phone (10 digits)"
+            required
+            aria-label="Phone"
+          />
+
+          <input
+            type="file"
+            name="profile_pic"
+            class="form-control"
+            id="inputGroupFile04"
+            aria-describedby="inputGroupFileAddon04"
+            aria-label="Upload"
+            accept=".jpg,.jpeg,.png,.gif,image/*"
+          />
+
+          <input type="submit" value="Submit " />
+          <p style="margin-top: 15px; color: #fff">
+            Already have an account?
+            <a href="/owner_login" style="color: #ffd700">Login here</a>
+          </p>
+        </form>
+      </div>
+    </div>
+
+    {% include 'medi_app/common/footer.html' %}
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
+      crossorigin="anonymous"
+    ></script>
+
+    <script>
+      document.getElementById("registrationForm").onsubmit = function (e) {
+        // Use alerts for visible feedback; returns false to stop submission.
+        // Name validation: only alphabets and spaces, min 3 chars, not blank
+        var nameField = document.querySelector("input[name='name']");
+        var name = nameField.value || "";
+        if (name.trim().length === 0) {
+          alert("Please enter your name.");
+          nameField.focus();
+          return false;
+        }
+        // Only letters and single/multiple spaces allowed, at least 3 characters total
+        var namePattern = /^[A-Za-z ]{3,}$/;
+        if (!namePattern.test(name)) {
+          alert("Name should contain only alphabets and spaces, and be at least 3 characters long. Numbers and special characters are not allowed.");
+          nameField.focus();
+          return false;
+        }
+
+        // Password validation: min 6 characters
+        var passField = document.querySelector("input[name='password']");
+        var password = passField.value || "";
+        if (password.length < 6) {
+          alert("Password must be at least 6 characters long.");
+          passField.focus();
+          return false;
+        }
+
+        // Email validation: only gmail.com or yahoo.com
+        var emailField = document.querySelector("input[name='email']");
+        var email = emailField.value || "";
+        var emailPattern = /^[a-zA-Z0-9._%+-]+@(gmail\.com|yahoo\.com)$/;
+        if (!emailPattern.test(email)) {
+          alert("Please enter a valid Gmail or Yahoo email address (for example: name@gmail.com).");
+          emailField.focus();
+          return false;
+        }
+
+        // Phone number validation: exactly 10 digits
+        var phoneField = document.querySelector("input[name='phone']");
+        var phone = phoneField.value || "";
+        var phonePattern = /^[0-9]{10}$/;
+        if (!phonePattern.test(phone)) {
+          alert("Please enter a valid 10-digit phone number (digits only).");
+          phoneField.focus();
+          return false;
+        }
+
+        // Profile picture validation (optional file)
+        var fileInput = document.getElementById("inputGroupFile04");
+        var file = fileInput.files[0];
+        if (file) {
+          var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+          if (!file.name || !allowedExtensions.exec(file.name)) {
+            alert("Please upload an image file with extension .jpg, .jpeg, .png or .gif.");
+            fileInput.value = "";
+            fileInput.focus();
+            return false;
+          }
+          var maxSize = 2 * 1024 * 1024; // 2 MB
+          if (file.size > maxSize) {
+            alert("Profile picture must be less than 2 MB.");
+            fileInput.value = "";
+            fileInput.focus();
+            return false;
+          }
+        }
+
+        // All validations passed
+        return true;
+      };
+    </script>
+  </body>
+</html>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Home</title>
+
+    {% include 'medi_app/common/common_css.html' %}
+
+    <style>
+      body, html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        font-family: sans-serif;
+        background: url("{% static 'medi_app/images/l.jpeg' %}") no-repeat center center fixed;
+        background-size: cover;
+      }
+
+      .feedback-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        padding: 20px;
+        background: rgba(0, 0, 0, 0.3);
+      }
+
+      .profile-div {
+       
+           width: 572px;
+    height: 453px;
+    text-align: center;
+    padding: 30px;
+    margin-top: -107px;
+
+    border-radius: 20px;
+        background: rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(12px) saturate(180%);
+        -webkit-backdrop-filter: blur(12px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        animation: fadeInUp 0.8s ease-out;
+      }
+
+      .profile-img {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        display: block;
+        margin: auto;
+        object-fit: cover;
+      }
+
+      .navbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 40px;
+        background: #fff;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+
+      .navbar .logo {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #2a2a2a;
+      }
+
+      .navbar nav {
+        display: flex;
+        gap: 28px;
+      }
+
+      .navbar nav a {
+        font-size: 1rem;
+        color: #444;
+        padding: 8px 0;
+        transition: color 0.2s;
+        text-decoration: none;
+      }
+
+      .navbar nav a:hover {
+        color: #6c63ff;
+      }
+
+      .btn-getstarted {
+        padding: 10px 22px;
+        background: #6c63ff;
+        color: #fff;
+        border-radius: 6px;
+        transition: background 0.3s;
+      }
+
+      .btn-getstarted:hover {
+        background: #574edf;
+      }
+    </style>
+  </head>
+
+  <body style="background-color: black">
+    <div class="main-div">
+
+      <!-- Navbar -->
+      <header class="navbar">
+        <div class="logo">MediLocator</div>
+
+        <nav>
+          <a href="/">Home</a>
+          <a href="/user_feedback/">Feedback</a>
+          {% comment %} <a href="/view_map/">View Map</a> {% endcomment %}
+          <a href="/medicine_request/">Medicine Request</a>
+          <a href="/user_edit_profile/">User Edit Profile</a>
+          <a href="/update_request/">Update Request</a>
+          <a href="/user_logout/">Logout</a>
+        </nav>
+      </header>
+
+      <!-- Django Messages -->
+      {% if messages %}
+        {% for m in messages %}
+        <div class="alert alert-danger alert-dismissible fade show mx-auto text-center mt-5"
+             style="width:50%; margin-top:60px; z-index:9999;">
+          <strong>{{ m }}</strong>
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
+      {% endif %}
+
+      <!-- Edit Profile Section -->
+
+      <div class="feedback-wrapper">
+        <div class="profile-div">
+          
+               <h2 style=" margin-left:10%; margin-top:-10px">Edit your profile</h2>
+
+          <form action="/user_edit_profile/" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <img src="/media/{{ user_info.pic_name }}" alt="Profile" class="profile-img">
+
+            <input type="file" name="pic" class="form-control mt-2">
+
+            <h6>Email: {{ user_info.email }}</h6>
+
+            <div style="text-align:left; margin-top:10px;">
+              <label>Your Name:</label>
+              <input type="text" name="name" class="form-control" value="{{ user_info.name }}">
+            </div>
+
+            <div style="text-align:left; margin-top:10px;">
+              <label>Phone No:</label>
+              <input type="number" name="phone" class="form-control" value="{{ user_info.phone }}">
+            </div>
+
+            <div class="text-center mt-3">
+              <button class="btn btn-danger">Edit</button>
+            </div>
+          </form>
+        </div>
+
+      </div>
+
+      {% include 'medi_app/common/footer.html' %}
+
+    </div>
+
+    <script>
+
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const form = document.querySelector("form");
+    const nameInput = document.querySelector("input[name='name']");
+    const phoneInput = document.querySelector("input[name='phone']");
+    const picInput = document.querySelector("input[name='pic']");
+
+    form.addEventListener("submit", function (e) {
+        let valid = true;
+
+        // -------------------- NAME VALIDATION --------------------
+     
+
+        // -------------------- PHONE VALIDATION --------------------
+        const phone = phoneInput.value.trim();
+        const phonePattern = /^[0-9]\d{9}$/;
+
+        if (!phonePattern.test(phone)) {
+            alert("Enter a valid 10-digit phone number.");
+            valid = false;
+        }
+
+        // -------------------- IMAGE VALIDATION --------------------
+        if (picInput.files.length > 0) {
+            const file = picInput.files[0];
+            const allowedTypes = ["image/jpeg", "image/png", "image/jpg","image/gif"];
+            const maxSize = 2 * 1024 * 1024; // 2 MB
+
+            if (!allowedTypes.includes(file.type)) {
+                alert("Only ,PNG,JPG,GIF and jpeg images are allowed.");
+                valid = false;
+            }
+
+            if (file.size > maxSize) {
+                alert("Image must be less than 2 MB.");
+                valid = false;
+            }
+        }
+
+        // If invalid → Stop form submit
+        if (!valid) {
+          //“Hey browser, don’t do what you were about to do!”    
+          //  “Stop the form from submitting.”
+            e.preventDefault();  
+        }
+    });
+
+    // Allow only digits for phone input (max 10 digits)
+    phoneInput.addEventListener("input", function () {
+        this.value = this.value.replace(/[^0-9]/g, "").slice(0, 10);
+    });
+
+});
+</script>
+
+
+    </script>
+  </body>
+</html>

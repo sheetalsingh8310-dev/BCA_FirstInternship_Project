@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Locations Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+
+    <style>
+
+          #map {
+              height: 500px;
+              width: 100%;
+              margin-bottom: 10px;
+          }
+          .search-container {
+              position: absolute;
+              top: 10px;
+              left: 50%;
+              transform: translateX(-50%);
+              z-index: 1000;
+              background: white;
+              padding: 10px;
+              border-radius: 5px;
+              box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+          }
+          .custom-marker i {
+              font-size: 20px;k
+              color: rgb(0, 4, 255); /* Customize the color here */
+          }
+              .navbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 40px;
+        background: #fff;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+      .navbar .logo {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #2a2a2a;
+      }
+      .navbar nav {
+        display: flex;
+        gap: 28px;
+      }
+      .navbar nav a {
+        font-size: 1rem;
+        color: #444;
+        padding: 8px 0;
+        transition: color 0.2s;
+      }
+      .navbar nav a:hover {
+        color: #6c63ff;
+      }
+      .navbar .btn-getstarted {
+        padding: 10px 22px;
+        background: #6c63ff;
+        color: #fff;
+        border-radius: 6px;
+        transition: background 0.3s;
+      }
+      .navbar .btn-getstarted:hover {
+        background: #574edf;
+      }
+
+      a{
+        text-decoration:none;
+      }
+    </style>
+    {% include 'medi_app/common/common_css.html'%}
+  </head>
+  <body style="background-color: white">
+    <div class="main-body">
+      <header class="navbar">
+        <div class="logo">MediLocator</div>
+        <nav>
+          <a href="/">Home</a>
+
+          <a class="nav-link active" aria-current="page" href="/user_feedback/"
+            >FeedBack</a
+          >
+
+         
+          <a
+            class="nav-link active"
+            aria-current="page"
+            href="/medicine_request/"
+          >
+            Medicine Request</a
+          >
+          <a
+            class="nav-link active"
+            aria-current="page"
+            href="/user_edit_profile/"
+          >
+            User edit profile
+          </a>
+          <a
+            class="nav-link active"
+            aria-current="page"
+            href="/update_request/"
+          >
+            update Request</a
+          >
+          <a class="nav-link active" aria-current="page" href="/user_logout/"
+            >Logout</a
+          >
+        </nav>
+         <div class="search-container" style="margin-top: 60px">
+        <input type="text" id="search" placeholder="Search for a location..." />
+        <button id="search-button">Search</button>
+      </div>
+      </header>
+
+    
+      <h1 style="margin-top: 80px; color: #334464; font-family: cooper">
+        User Locations
+      </h1>
+      {% comment %} <div class="search-container" style="margin-top: 60px">
+        <input type="text" id="search" placeholder="Search for a location..." />
+        <button id="search-button">Search</button>
+      </div> {% endcomment %}
+      <div id="map"></div>
+    </div>
+    {%include 'medi_app/common/footer.html'%}
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+      var circle
+      // Initialize the map
+      var map = L.map('map').setView([20.5937, 78.9629], 5); // Centered on India, adjust as necessary
+
+      // Add OpenStreetMap tiles
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 19,
+          attribution: '© OpenStreetMap contributors'
+      }).addTo(map);
+
+      // Function to create a custom icon with FontAwesome
+      function createCustomIcon(iconClass) {
+          return L.divIcon({
+              html: `<i class="${iconClass}"></i>`,
+              className: 'custom-marker', // Custom class for styling
+              iconSize: [30, 42], // Adjust size of the icon
+              iconAnchor: [15, 42] // Position of the anchor point
+          });
+      }
+
+      // Store user data with markers
+      var userMarkers = [];
+
+      {% for user in users %}
+          var marker = L.marker([{{ user.lat }}, {{ user.log }}], {
+              icon: createCustomIcon('{{user.icon_class}}') // Use a FontAwesome icon
+
+          }).bindPopup('<br>{{ user.shop_name }}');
+
+          userMarkers.push({
+              name: '{{ user.shop_name }}',
+              description: '{{ user.description }}',
+              lat: '{{ user.lat }}',
+              log: '{{ user.log }}',
+              marker: marker
+          });
+      {% endfor %}
+
+      // Function to perform text-to-speech
+      function speakText(text) {
+          var utterance = new SpeechSynthesisUtterance(text);
+          speechSynthesis.speak(utterance);
+      }
+
+      // Function to calculate the distance between two points (Haversine formula)
+      function calculateDistance(lat1, lon1, lat2, lon2) {
+          const R = 6371; // Radius of the Earth in kilometers
+          const dLat = (lat2 - lat1) * Math.PI / 180;
+          const dLon = (lon2 - lon1) * Math.PI / 180;
+          const a =
+              Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+              Math.sin(dLon / 2) * Math.sin(dLon / 2);
+          const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+          const distance = R * c; // Distance in kilometers
+          return distance;
+      }
+
+      // Function to search for a location
+      document.getElementById('search-button').addEventListener('click', function() {
+          var query = document.getElementById('search').value;
+          var url = 'https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(query);
+
+          fetch(url)
+              .then(response => response.json())
+              .then(data => {
+                  if (data.length > 0) {
+                      // Get the first result
+                      var result = data[0];
+                      var searchLat = result.lat;
+                      var searchLon = result.lon;
+
+                      // Move the map to the new location
+                      map.setView([searchLat, searchLon], 12);
+
+                      // Remove previous circle
+                      if (circle) {
+                          map.removeLayer(circle);
+                      }
+
+                      // Draw a circle with a 5km radius
+                      circle = L.circle(
+                          [searchLat, searchLon],
+                          {"color": "#3388ff", "fillColor": "#3388ff", "fillOpacity": 0.3, "radius": 5000}
+                      ).addTo(map);
+
+                      // Clear all previous markers
+                      userMarkers.forEach(function(user) {
+                          map.removeLayer(user.marker);
+                      });
+
+                      // Check and display markers within 5km radius
+                      userMarkers.forEach(function(user) {
+                          var distance = calculateDistance(searchLat, searchLon, user.lat, user.log);
+                          if (distance <= 5) {
+                              // Add marker to the map if within 5km
+                              user.marker.addTo(map);
+
+
+                              // Add click event for text-to-speech
+                              user.marker.on('click', function() {
+                                  speakText(user.description); // Call the speak function
+                              });
+                          }
+                      });
+                  } else {
+                      alert('Location not found. Please try again.');
+                  }
+              })
+              .catch(error => console.error('Error:', error));
+      });
+    </script>
+  </body>
+</html>

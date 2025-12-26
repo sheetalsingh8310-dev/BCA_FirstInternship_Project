@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Feedback Form</title>
+    {% include 'medi_app/common/common_css.html' %}
+    <style>
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        height: 200%;
+        font-family: sans-serif;
+        background: url("{% static 'medi_app/images/l.jpeg' %}") no-repeat center center fixed;
+        background-size: cover;
+      }
+      .feedback-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top:-44%;
+        height: 592%;
+        padding: 20px;
+        background: rgba(0, 0, 0, 0.3);
+      }
+      .feedback-box {
+        margin-top: -10px;
+        width: 470px;
+        padding: 30px;
+        height: 450px;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(12px) saturate(180%);
+        -webkit-backdrop-filter: blur(12px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+      }
+      .feedback-box h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 2em;
+        color: #fff;
+        margin-top: -30px;
+      }
+      .feedback-box .form-control,
+      .feedback-box .form-select,
+      .feedback-box textarea {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 15px;
+        background: rgba(255, 255, 255, 0.6);
+        border: none;
+        border-radius: 8px;
+        color: #111;
+        font-size: 1em;
+      }
+      .feedback-box input[type="submit"] {
+        width: 100%;
+        padding: 12px;
+        background: #ff7e5f;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1em;
+        cursor: pointer;
+        transition: 0.3s ease all;
+      }
+      .feedback-box input[type="submit"]:hover {
+        background-color: lightseagreen;
+        color: whitesmoke;
+        box-shadow: 0 0 12px rgba(255, 234, 221, 0.9);
+        transition: 0.5s all ease;
+      }
+      @media (max-width: 500px) {
+        .feedback-box {
+          margin: 0 10px;
+          padding: 20px;
+        }
+      }
+      .navbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 40px;
+        background: #fff;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+      .navbar .logo {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #2a2a2a;
+      }
+      .navbar nav {
+        display: flex;
+        gap: 28px;
+      }
+      .navbar nav a {
+        font-size: 1rem;
+        color: #444;
+        padding: 8px 0;
+        transition: color 0.2s;
+      }
+      .navbar nav a:hover {
+        color: #6c63ff;
+      }
+      .navbar .btn-getstarted {
+        padding: 10px 22px;
+        background: #6c63ff;
+        color: #fff;
+        border-radius: 6px;
+        transition: background 0.3s;
+      }
+      .navbar .btn-getstarted:hover {
+        background: #574edf;
+      }
+      a {
+        text-decoration: none;
+      }
+      .alert-fixed-top {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 2000;
+        width: 90%;
+        max-width: 600px;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="navbar">
+      <div class="logo">MediLocator</div>
+      <nav>
+        <a href="/">Home</a>
+        <a href="/user_feedback/">FeedBack</a>
+        {% comment %} <a href="/view_map/">view map</a> {% endcomment %}
+        <a href="/medicine_request/">Medicine Request</a>
+        <a href="/user_edit_profile/">User edit profile</a>
+        <a href="/update_request/">update Request</a>
+        <a href="/user_logout/">Logout</a>
+      </nav>
+    </header>
+
+    {% if messages %}
+    <div class="container  mt-3">
+      {% for message in messages %}
+      <div
+        class="alert
+          {% if message.tags == 'error' %}
+            alert-danger
+          {% else %}
+            alert-{{ message.tags }}
+          {% endif %}
+          alert-dismissible fade alert-fixed-top show mx-auto text-center"
+        role="alert"
+        style="width: 40%;"
+      >
+        <strong>{{ message }}</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="feedback-wrapper">
+      <div class="feedback-box">
+        <h1>Medicine request</h1>
+        <form method="post" action="/medicine_request/" enctype="multipart/form-data">
+          {% csrf_token %}
+          <input
+            type="email"
+            name="email"
+            class="form-control"
+            placeholder="Email"
+            required
+            value="{{ user_detail.email }}"
+            readonly
+          />
+          <input
+            type="tel"
+            class="form-control"
+            name="whatsupp"
+            placeholder="WhatsApp No (10 digits)"
+            required
+            pattern="[0-9]{10}"
+            title="Please enter a valid 10-digit mobile number"
+          />
+          <input
+            type="text"
+            name="medicine"
+            class="form-control"
+            placeholder="Medicine Name"
+            required
+          />
+          <input
+            type="text"
+            name="refer_doctor"
+            class="form-control"
+            placeholder="Refer Doctor Name"
+            required
+          />
+          <textarea
+            class="form-control"
+            placeholder="Messages"
+            name="message"
+            required
+          ></textarea>
+          <input type="submit" value="Submit" />
+        </form>
+      </div>
+    </div>
+
+    {% include 'medi_app/common/footer.html' %}
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

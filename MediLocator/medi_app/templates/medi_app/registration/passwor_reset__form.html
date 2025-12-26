@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Password Reset</title>
+</head>
+<body>cd
+
+    {% include 'medi_app/common/header.html' %}
+    {% if messages %}
+
+  {% for m in messages %}
+  <!-- <h1 style=" margine-top:70px;"> {{m}}</h1> -->
+   <div class="alert alert-danger alert-dismissible fade show mx-auto text-center" role="alert" role="alert" style="width:50%; margin-top:50px ; z-index:9999;">
+    <strong>{{m}}</strong>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+   </div>
+   {% endfor %}
+
+   {% endif %}
+  <h2>Forgot your password?</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.email.label_tag }}<br>
+    {{ form.email }}<br><br>
+    <button type="submit">Send password reset email</button>
+  </form>
+</body>
+</html>

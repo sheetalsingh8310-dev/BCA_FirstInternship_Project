@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MediLocator – Home</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+ body, html {
+      margin: 0;
+      padding: 0;
+      height: 500px;
+      width:100%
+      font-family: sans-serif;
+      /* Apply background image */
+      background: url("{% static 'medi_app/images/imge1.png' %}") no-repeat center center fixed;
+      background-size: cover;
+    }
+  
+    
+      
+     
+
+    .navbar-brand {
+      font-weight: 700;
+      font-size: 24px;
+      color: #22c55e !important;
+    }
+    .navbar-nav .nav-link {
+      font-size: 18px;
+      font-weight: 600;
+      color: white !important;
+      margin: 0 10px;
+      transition: color 0.3s ease, transform 0.3s ease;
+    }
+    .navbar-nav .nav-link:hover {
+      color: #22c55e !important;
+      transform: scale(1.05);
+    }
+
+    .hero .carousel-item img,
+    .hero .carousel-item video {
+      width: 100%;
+      height: 80vh;
+      object-fit: cover;
+    }
+    .hero .overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1;
+    }
+    .hero-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      z-index: 2;
+      color: white;
+      max-width: 700px;
+    }
+    .hero-content h1 {
+      font-size: 3.5rem;
+      font-weight: 700;
+      text-shadow: 0 4px 15px rgba(0,0,0,0.7);
+    }
+    .hero-content p {
+      font-size: 1.3rem;
+      margin: 1rem 0;
+    }
+
+    .info-section {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 60px 10%;
+      flex-wrap: wrap;
+      background: #ffffff;
+    }
+    .info-section .hero-text {
+      max-width: 500px;
+    }
+    .info-section .hero-text h3 {
+      font-size: 36px;
+      margin-bottom: 15px;
+      font-weight: 700;
+      color: #111;
+    }
+    .info-section .hero-text p {
+      font-size: 18px;
+      color: #333;
+    }
+    .info-section img {
+      max-width: 480px;
+      border-radius: 12px;
+      box-shadow: 0 6px 25px rgba(0,0,0,0.2);
+    }
+
+    .card-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+      margin: 60px auto;
+      max-width: 1200px;
+      padding: 20px;
+    }
+    .feedback-card {
+      background: #fff;
+      color: #333;
+      border-radius: 14px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      padding: 20px;
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .feedback-card:hover {
+      transform: translateY(-10px) scale(1.03);
+      box-shadow: 0 18px 35px rgba(0,0,0,0.25);
+    }
+    .feedback-card img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+    .feedback-card h6 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #22c55e;
+    }
+
+    .tags {
+      padding: 50px 10%;
+      background: #f1f5f9;
+      text-align: center;
+    }
+    .tags h3 {
+      margin-bottom: 20px;
+      font-weight: 700;
+    }
+    .tag-list span {
+      display: inline-block;
+      background: #e2e8f0;
+      padding: 10px 18px;
+      border-radius: 25px;
+      margin: 7px;
+      font-size: 15px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+    .tag-list span:hover {
+      background: #22c55e;
+      color: white;
+      transform: scale(1.08);
+    }
+  </style>
+</head>
+<body>
+  
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">MediLocator</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    
+
+
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/about/">About</a>
+        </li>
+
+         {% comment %} <li class="nav-item"> {% endcomment %}
+          {% comment %} <a class="nav-link" href="/contact/">contact</a>
+        </li> {% endcomment %}
+
+         <li class="nav-item">
+          <a class="nav-link" href="/all_feedback/">User Reviews</a>
+        </li>
+
+        
+        
+
+         
+<li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Registration
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/user_reg/">user Registration</a></li>
+            <li><a class="dropdown-item" href="/owner_reg/">Vendor Registration</a></li>
+           
+          </ul>
+        </li>
+        
+       
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Login
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/user_login/">user</a></li>
+            <li><a class="dropdown-item" href="/owner_login/">Shop Owner</a></li>
+            <li><a class="dropdown-item" href="/admin/">Admin</a></li>
+
+           
+          </ul>
+        </li>
+        
+      </ul>
+      </div>
+    </div>
+  </nav>
+
+  <section class="hero position-relative">
+    <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        <div class="carousel-item active" data-bs-interval="4000">
+          <img src="{% static 'medi_app/images/pharmacy.jpeg' %}" alt="Pharmacy">
+        </div>
+        <div class="carousel-item" data-bs-interval="5000">
+          <video autoplay muted loop playsinline>
+            <source src="{% static 'medi_app/images/crousle.mp4' %}" type="video/mp4">
+          </video>
+        </div>
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+      </button>
+    </div>
+    <div class="overlay"></div>
+    <div class="hero-content">
+      <h1>Find Your Nearest <strong>Pharmacy</strong></h1>
+      <p>Trusted locations, real-time availability, and instant results.</p>
+      {% comment %} <a href="#" class="btn btn-success btn-lg mt-3">Start Searching</a> {% endcomment %}
+    </div>
+  </section>
+
+  <section class="info-section">
+    <div class="hero-text">
+      <h3>"The best way to get your prescription."</h3>
+      <p>"Bringing loving care to health care."</p>
+      <p>Quick, reliable, and accurate results for all your healthcare needs.</p>
+    </div>
+    <img src="{% static 'medi_app/images/doct.jpeg' %}" alt="Doctor Illustration">
+  </section>
+
+
+
+  
+  {% include 'medi_app/common/footer.html' %}
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

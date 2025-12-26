@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+{%load static%}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Locations Map</title>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+    {% include 'medi_app/common/common_css.html' %}
+
+    <!-- Google Fonts for nice font styles -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* Basic reset and global styles */
+      body {
+        background: black;
+      }
+
+      h1 {
+        text-align: center;
+        margin-top: 100px;
+        color: #333;
+        font-weight: 600;
+      }
+
+      /* Container for the map and form */
+      .container {
+        margin: 0px auto;
+        width: 100%;
+        max-width: 1200px;
+        padding: 20px;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        margin-top: 100px;
+        margin-bottom: 20px;
+      }
+
+      /* Map styling */
+      #map {
+        height: 500px;
+        border-radius: 8px;
+        border: 2px solid black;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      /* Styling for the search container */
+      .search-container {
+        position: absolute;
+        top: 120px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1000;
+        background-color: white;
+        padding: 12px 20px;
+        border-radius: 30px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 80%;
+      }
+
+      .search-container input {
+        width: 70%;
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ddd;
+        border-radius: 30px;
+        outline: none;
+      }
+
+      .search-container input:focus {
+        border-color: #0066ff;
+      }
+
+      .search-container button {
+        background-color: #0066ff;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 30px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: background-color 0.3s ease;
+      }
+
+      .search-container button:hover {
+        background-color: #0055cc;
+      }
+
+      /* Form styling */
+      .form-container {
+        text-align: center;
+        margin-top: 20px;
+      }
+
+      .form-container input[type="submit"] {
+        background-color: #28a745;
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        font-size: 16px;
+        border-radius: 30px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        margin-bottom: 10px;
+      }
+
+      .form-container input[type="submit"]:hover {
+        background-color: #218838;
+      }
+
+      /* Style for hidden inputs */
+      input[type="text"][hidden] {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    {% include 'medi_app/shopowner/owner_header.html' %}
+
+    <div class="container">
+      <h1></h1>
+
+      <!-- Search bar and button -->
+      <div class="search-container">
+        <input type="text" id="search" placeholder="Search for a location..." />
+        <button id="search-button">Search</button>
+      </div>
+
+      <!-- Form to send the coordinates -->
+      <form method="POST" action="/map_location/">
+        {% csrf_token %}
+        <input type="text" id="long" name="longitude" />
+        <input type="text" id="lat" name="lat" />
+        <div class="form-container">
+          <button class="btn btn-danger">submit</button>
+        </div>
+      </form>
+
+      <!-- Map container -->
+      <div id="map"></div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+      var marker;
+      var clickedLat;
+      var clickedLng;
+      var long = document.getElementById("long");
+      var lati = document.getElementById("lat");
+
+      var map = L.map("map").setView([20.5937, 78.9629], 5); // Centered on India, adjust as necessary
+
+      // Add OpenStreetMap tiles
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution: "© OpenStreetMap contributors",
+      }).addTo(map);
+
+      // Function to search for a location
+      document
+        .getElementById("search-button")
+        .addEventListener("click", function () {
+          var query = document.getElementById("search").value;
+          var url =
+            "https://nominatim.openstreetmap.org/search?format=json&q=" +
+            encodeURIComponent(query);
+
+          fetch(url)
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.length > 0) {
+                // Get the first result
+                var result = data[0];
+                var lat = result.lat;
+                var lon = result.lon;
+
+                // Move the map to the new location
+                map.setView([lat, lon], 13);
+
+                // Clear previous markers (if any)
+                map.eachLayer(function (layer) {
+                  if (layer instanceof L.Marker) {
+                    map.removeLayer(layer);
+                  }
+                });
+
+                // Add click event on the map to place a marker
+                map.on("click", function (e) {
+                  clickedLat = e.latlng.lat;
+                  clickedLng = e.latlng.lng;
+
+                  // Remove the existing marker if it exists
+                  if (marker) {
+                    map.removeLayer(marker);
+                  }
+
+                  // Add a new marker
+                  marker = L.marker([clickedLat, clickedLng])
+                    .addTo(map)
+                    .bindPopup("You are here!")
+                    .openPopup();
+
+                  console.log(clickedLat, clickedLng);
+                  long.value = clickedLng;
+                  lati.value = clickedLat;
+                });
+              } else {
+                alert("Location not found. Please try again.");
+              }
+            })
+            .catch((error) => console.error("Error:", error));
+        });
+    </script>
+
+    {% include 'medi_app/common/footer.html' %} <s
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossor
+  </body>
+</html>

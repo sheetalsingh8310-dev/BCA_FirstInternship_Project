@@ -1,0 +1,301 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Contact Us</title>
+  {% include 'medi_app/common/common_css.html' %}
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: url("{% static 'medi_app/images/downloa7.jpeg' %}") no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+      position: relative;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      {% comment %} background: rgba(146, 96, 96, 0.65); {% endcomment %}
+      z-index: 0;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height:auto;
+      padding: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .form-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      background;
+      backdrop-filter: blur(30px);
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      padding: 40px;
+      {% comment %} max-width: 800px; {% endcomment %}
+    height:80%;
+      width: 60%;
+      color: #333333;
+      transition: all 0.3s ease;
+    }
+
+    .form-wrapper:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .form-side {
+      flex: 1;
+      min-width: 240px;
+      height:80%;
+    }
+
+    .form-header {
+      text-align: left;
+      margin-bottom: 25px;
+      color: blue;
+       height:15%;
+    }
+
+    .form-header h1 {
+      font-size: 2.2em;
+      margin-bottom: 10px;
+    }
+
+    .form-header p {
+      font-size: 1em;
+      line-height: 1.5;
+      margin-bottom:10px;
+      color: black;
+    }
+
+    .form-control,
+    textarea {
+      width: 85%;
+      padding: 10px 12px;
+      margin-bottom: 10px;
+      border: 2px solid black;
+      border-radius: 8px;
+      font-size: 1em;
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+      {% comment %} outline: none; {% endcomment %}
+      transition: 0.3s;
+    }
+
+    .form-control:focus,
+    textarea:focus {
+      border-color: #6c63ff;
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    .error-message {
+      color: #ff6b6b;
+      font-size: 0.85em;
+      margin-top: -12px;
+      margin-bottom: 6px;
+      display: none;
+    }
+
+    input[type="submit"] {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #6c63ff, #574edf);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+    }
+
+    input[type="submit"]:hover {
+      background: linear-gradient(135deg, #574edf, #6c63ff);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    /* RIGHT SIDE IMAGE */
+    .form-image-inside {
+      flex: 1;
+      min-width: 250px;
+      height:95%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .form-image-inside img {
+      width: 100%;
+      max-width: 400px;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+      transition: transform 0.3s ease;
+    }
+
+    .form-image-inside img:hover {
+      transform: scale(1.05);
+    }
+
+    @media (max-width: 900px) {
+      .form-wrapper {
+        flex-direction: column;
+        padding: 25px;
+      }
+
+      .form-image-inside img {
+        height: 220px;
+      }
+
+      .form-header h1 {
+        font-size: 1.8em;
+      }
+    }
+    .navbar a{
+       font-size: 1rem;
+      color: #444;
+      padding: 8px 0;
+      transition: color 0.2s;
+    }
+    a{
+        text-decoration: none;
+
+    }
+  </style>
+</head>
+
+<body>
+  {% comment %} {% include 'medi_app/common/header.html' %} {% endcomment %}
+ <nav class="navbar navbar-expand-lg navbar-dark bg-light blue sticky-top">
+  <header class="navbar container">
+    <div style=" font-size: 1.8rem;
+  font-weight: bold;
+  color: #007bff; /* blue accent */
+  cursor: pointer;
+  transition: transform 0.3s;">MediLocator</div>
+    <nav style="  display: flex;
+  gap: 1.5rem;  ">
+      <a href="/">Home</a>
+      <a href="/about">About Us</a>
+           <a href="/all_feedback/">User Review</a>
+    
+    </nav>
+
+    <button class="navbar-toggler" type="button" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </header>
+</nav>
+
+
+  <div class="container">
+    <div class="form-wrapper">
+      
+      <!-- LEFT SIDE FORM -->
+      <div class="form-side">
+        <div class="form-header">
+          <h1 style="margin-top:-5px;">Contact Us</h1>
+          <p style="margin-top:-10px;">We would love to hear from you.</p>
+        </div>
+
+        <form method="post" action="/owner_feedback/" id="contactForm" enctype="multipart/form-data">
+          {% csrf_token %}
+          <input type="text" name="name" class="form-control" placeholder="Full Name" required>
+          <div id="nameError" class="error-message">Name must be at least 3 characters</div>
+
+          <input type="text" name="phone" class="form-control" placeholder="Phone" maxlength="10" required>
+          <div id="phoneError" class="error-message">Enter a valid 10-digit phone</div>
+
+          <input type="email" name="email" class="form-control" placeholder="Email" required>
+          <div id="emailError" class="error-message">Enter a valid Gmail address</div>
+
+          <textarea name="message" class="form-control" rows="4" placeholder="Your Message…" required></textarea>
+          <div id="messageError" class="error-message">Message must be at least 10 characters</div>
+
+          <input type="submit" value="Send Message">
+        </form>
+      </div>
+
+      <!-- RIGHT SIDE IMAGE -->
+      <div class="form-image-inside">
+        <img src="{% static 'medi_app/images/contactt.jpeg' %}" alt="Contact Image">
+      </div>
+
+    </div>
+  </div>
+
+  <div style="z-index:2">
+    {% include 'medi_app/common/footer.html' %}
+  </div>
+
+  <script>
+    document.getElementById("contactForm").onsubmit = function (e) {
+      let valid = true;
+
+      const name = document.querySelector("input[name='name']").value.trim();
+      if (name.length < 3) {
+        document.getElementById("nameError").style.display = "block";
+        valid = false;
+      } else {
+        document.getElementById("nameError").style.display = "none";
+      }
+
+      const phone = document.querySelector("input[name='phone']").value.trim();
+      const phonePattern = /^[0-9]{10}$/;
+      if (!phonePattern.test(phone)) {
+        document.getElementById("phoneError").style.display = "block";
+        valid = false;
+      } else {
+        document.getElementById("phoneError").style.display = "none";
+      }
+
+      const email = document.querySelector("input[name='email']").value.trim();
+      const gmailPattern = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+      if (!gmailPattern.test(email)) {
+        document.getElementById("emailError").style.display = "block";
+        valid = false;
+      } else {
+        document.getElementById("emailError").style.display = "none";
+      }
+
+      const message = document.querySelector("textarea[name='message']").value.trim();
+      if (message.length < 10) {
+        document.getElementById("messageError").style.display = "block";
+        valid = false;
+      } else {
+        document.getElementById("messageError").style.display = "none";
+      }
+
+      if (!valid) e.preventDefault();
+    };
+
+    document.querySelector("input[name='phone']").addEventListener("input", function () {
+      this.value = this.value.replace(/[^0-9]/g, "").slice(0, 10);
+    });
+  </script>
+</body>
+</html>

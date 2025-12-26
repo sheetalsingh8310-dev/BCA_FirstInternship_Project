@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Registration — MediLocator</title>
+    {% include 'medi_app/common/common_css.html' %}
+
+    <style>
+      /* Full-page background */
+      body, html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: url("{% static 'medi_app/images/l.jpeg' %}") no-repeat center center fixed;
+        background-size: cover;
+      }
+
+      /* Overlay wrapper for centering the card */
+      .feedback-wrapper{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width:100%;
+        height: 100vh;
+        padding: 20px;
+        background: rgba(0,0,0,0.3);
+      }
+
+      /* Frosted glass card */
+      .feedback-box {
+        width:35%;
+        height:auto;
+        margin-top:5px;
+        margin-left:-5%;
+        padding: 30px 20px;
+        border-radius: 20px;
+        backdrop-filter: blur(15px) saturate(180%);
+        -webkit-backdrop-filter: blur(15px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+        animation: fadeInUp 0.8s ease-out;
+        text-align: center;
+        background: rgba(255,255,255,0.08);
+      }
+
+      .feedback-box h1 {
+        text-align: center;
+        margin-top: -10px;
+        font-size: 2em;
+      }
+
+      .feedback-box .form-control,
+      .feedback-box .form-select,
+      .feedback-box textarea {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 15px;
+        border-radius: 8px;
+        color: #111;
+        font-size: 1em;
+      }
+
+      .feedback-box input[type="submit"] {
+        width: 75%;
+        padding: 12px;
+        background: linear-gradient(90deg, #ff7e5f, #feb47b);
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        font-size: 1.1em;
+        cursor: pointer;
+        transition: background 0.3s, transform 0.2s;
+      }
+
+      .feedback-box input[type="submit"]:hover {
+        background: linear-gradient(90deg, #eb6750, #fd9f78);
+        transform: translateY(-2px);
+      }
+
+      @media (max-width: 900px) {
+        .feedback-box { width: 85%; margin-left:0; }
+      }
+
+      @media (max-width: 500px) {
+        .feedback-box {
+          padding: 30px 20px;
+        }
+      }
+
+      a{
+        text-decoration:none;
+        font-size:20px;
+      }
+
+      /* small helper for inline error display (optional) */
+      .error {
+        color: #ffdddd;
+        background: rgba(255,0,0,0.15);
+        padding: 6px 10px;
+        border-radius: 6px;
+        margin-bottom: 10px;
+        display:none;
+      }
+    </style>
+  </head>
+  <body>
+    {% comment %} {% include 'medi_app/common/header.html' %} {% endcomment %}
+    <nav class="navbar navbar-expand-lg navbar-dark bg-light blue sticky-top">
+      <header class="navbar container">
+        <div
+          style="
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #007bff; /* blue accent */
+            cursor: pointer;
+            transition: transform 0.3s;
+          "
+        >
+          MediLocator
+        </div>
+        <nav style="display: flex; gap: 1.5rem">
+          <a href="/">Home</a>
+        </nav>
+
+        <button
+          class="navbar-toggler"
+          type="button"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      </header>
+    </nav>
+
+    {% if messages %} {% for m in messages %}
+    <div
+      class="alert alert-danger alert-dismissible fade show mx-auto text-center"
+      role="alert"
+      style="width: 50%; margin-top: 50px; z-index: 9999"
+    >
+      <strong>{{ m }}</strong>
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      ></button>
+    </div>
+    {% endfor %} {% endif %}
+
+    <div class="feedback-wrapper">
+      <div class="feedback-box">
+        <h1>User Registration</h1>
+
+        <!-- Inline error box (optional) -->
+        <div id="errorBox" class="error" role="alert"></div>
+
+        <form
+          method="post"
+          action="/user_reg/"
+          id="registrationForm"
+          enctype="multipart/form-data"
+          novalidate
+        >
+          {% csrf_token %}
+          <input
+            type="text"
+            name="name"
+            class="form-control"
+            placeholder="Name"
+            required
+            aria-label="Name"
+          />
+          <input
+            type="password"
+            name="password"
+            class="form-control"
+            placeholder="Password (min 6 chars)"
+            required
+            aria-label="Password"
+          />
+          <input
+            type="email"
+            name="email"
+            class="form-control"
+            placeholder="Email (gmail.com or yahoo.com)"
+            required
+            aria-label="Email"
+          />
+          <input
+            type="tel"
+            name="phone"
+            class="form-control"
+            placeholder="Phone (10 digits)"
+            required
+            aria-label="Phone"
+          />
+          <input
+            type="file"
+            name="profile_pic"
+            class="form-control"
+            id="inputGroupFile04"
+            accept="image/*"
+            required
+            aria-label="Upload Profile Picture"
+          />
+          <input type="submit" value="Register" />
+        </form>
+        <p style="margin-top: 15px; color: black">
+          Already have an account?
+          <a href="/user_login/" style="color: #ffd700">Login here</a>
+        </p>
+      </div>
+    </div>
+
+    {% include 'medi_app/common/footer.html' %}
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Validation Script -->
+    <script>
+      (function () {
+        var form = document.getElementById("registrationForm");
+        var errorBox = document.getElementById("errorBox");
+
+        form.onsubmit = function (e) {
+          // Clear previous error
+          errorBox.style.display = "none";
+          errorBox.textContent = "";
+
+          // Helper to show error (and optionally focus the field)
+          function showError(message, field) {
+            // Use inline error box
+            errorBox.textContent = message;
+            errorBox.style.display = "block";
+            if (field && typeof field.focus === "function") {
+              field.focus();
+            }
+            return false;
+          }
+
+          // --- Name validation: only alphabets and spaces, not empty ---
+          var nameField = document.querySelector("input[name='name']");
+          var name = nameField.value || "";
+          // Reject if empty or only spaces
+          if (name.trim().length === 0) {
+            e.preventDefault();
+            return showError("Please enter your name (letters only).", nameField);
+          }
+          // Only letters and spaces allowed
+          var namePattern = /^[A-Za-z ]+$/;
+          if (!namePattern.test(name)) {
+            e.preventDefault();
+            return showError("Name should contain only alphabets and spaces. Numbers and special characters are not allowed.", nameField);
+          }
+
+          // --- Password validation: min 6 characters ---
+          var passField = document.querySelector("input[name='password']");
+          var password = passField.value || "";
+          if (password.length < 6) {
+            e.preventDefault();
+            return showError("Password must be at least 6 characters long.", passField);
+          }
+
+          // --- Email validation: only gmail.com or yahoo.com ---
+          var emailField = document.querySelector("input[name='email']");
+          var email = emailField.value || "";
+          var emailPattern = /^[a-zA-Z0-9._%+-]+@(gmail\.com|yahoo\.com)$/;
+          if (!emailPattern.test(email)) {
+            e.preventDefault();
+            return showError("Please enter a valid Gmail or Yahoo email address (for example: name@gmail.com).", emailField);
+          }
+
+          // --- Phone validation: exactly 10 digits ---
+          var phoneField = document.querySelector("input[name='phone']");
+          var phone = phoneField.value || "";
+          var phonePattern = /^[0-9]{10}$/;
+          if (!phonePattern.test(phone)) {
+            e.preventDefault();
+            return showError("Please enter a valid 10-digit phone number (numbers only).", phoneField);
+          }
+
+          // --- Profile picture validation ---
+          var fileInput = document.getElementById("inputGroupFile04");
+          var file = fileInput.files[0];
+          if (!file) {
+            e.preventDefault();
+            return showError("Please upload a profile picture.", fileInput);
+          } else {
+            var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+            // file.name may not always exist in older browsers, but we'll check
+            if (!file.name || !allowedExtensions.exec(file.name)) {
+              e.preventDefault();
+              fileInput.value = "";
+              return showError("Please upload an image file with .jpg, .jpeg, .png or .gif extension.", fileInput);
+            }
+            var maxSize = 2 * 1024 * 1024; // 2MB
+            if (file.size > maxSize) {
+              e.preventDefault();
+              fileInput.value = "";
+              return showError("Profile picture must be less than 2 MB.", fileInput);
+            }
+          }
+
+          // All validations passed
+          return true;
+        };
+      })();
+    </script>
+  </body>
+</html>

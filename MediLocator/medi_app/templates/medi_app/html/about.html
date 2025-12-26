@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Us — MediLocator</title>
+  <style>
+    /* Reset & base */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background-color: #f7f8fa;
+    }
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+      border-radius: 10px;
+    }
+    .wrapper {
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    /* Navbar */
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 40px;
+      background: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    .navbar .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #2a2a2a;
+    }
+    .navbar nav {
+      display: flex;
+      justify-content:center;
+      align-items:center;
+      gap: 28px;
+    }
+    .navbar nav a {
+      font-size: 1rem;
+      color: #444;
+      padding: 8px 0;
+      transition: color 0.2s;
+    }
+    .navbar nav a:hover {
+      color: #6c63ff;
+    }
+    .navbar .btn-getstarted {
+      padding: 10px 22px;
+      background: #6c63ff;
+      color: #fff;
+      border-radius: 6px;
+      transition: background 0.3s;
+    }
+    .navbar .btn-getstarted:hover {
+      background: #574edf;
+    }
+
+    /* Hero section full cover */
+    .hero {
+      position: relative;
+      height: 450px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #fff;
+      background: url("{% static 'medi_app/images/o.jpeg' %}") center center/cover no-repeat;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.45); /* overlay for readability */
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 700px;
+      padding: 0 20px;
+    }
+    .hero-content h1 {
+      font-size: 2.8rem;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+    .hero-content p {
+      font-size: 1.15rem;
+      margin-bottom: 25px;
+      opacity: 0.9;
+    }
+    .hero-content .btn-cta {
+      padding: 12px 28px;
+      background: #6c63ff;
+      color: #fff;
+      border-radius: 6px;
+      transition: background 0.3s;
+    }
+    .hero-content .btn-cta:hover {
+      background: #574edf;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 60px auto;
+      padding: 0 20px;
+    }
+
+    /* Services / Features Cards */
+    .services-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+      margin-bottom: 60px;
+    }
+    .service-card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      padding: 30px 20px;
+      text-align: center;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .service-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+    }
+    .service-card .icon {
+      font-size: 2rem;
+      color: #6c63ff;
+      margin-bottom: 15px;
+    }
+    .service-card h3 {
+      margin-bottom: 12px;
+      font-size: 1.3rem;
+      color: #2a2a2a;
+    }
+    .service-card p {
+      font-size: 1rem;
+      color: #555;
+    }
+
+    /* Split / About + image */
+    .split-section {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 40px;
+      margin-bottom: 80px;
+    }
+    .split-text {
+      flex: 1;
+      min-width: 300px;
+    }
+    .split-text h2 {
+      font-size: 1.9rem;
+      color: #2a2a2a;
+      margin-bottom: 18px;
+    }
+    .split-text p {
+      font-size: 1rem;
+      color: #444;
+      margin-bottom: 16px;
+    }
+    .split-text .btn-secondary {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 11px 26px;
+      background: #6c63ff;
+      color: #fff;
+      border-radius: 6px;
+      transition: background 0.3s;
+    }
+    .split-text .btn-secondary:hover {
+      background: #574edf;
+    }
+    .split-img {
+      flex: 1;
+      min-width: 300px;
+    }
+
+    /* Stats / Milestones */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 30px;
+      margin-bottom: 80px;
+    }
+    .stat-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 35px 20px;
+      text-align: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    }
+    .stat-card .num {
+      font-size: 2.6rem;
+      color: #6c63ff;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .stat-card .label {
+      font-size: 1rem;
+      color: #555;
+    }
+
+    /* Quote Section */
+    .quote-section {
+      background: #f1f3ff;
+      padding: 50px 20px;
+      border-radius: 12px;
+      margin-bottom: 80px;
+    }
+    .quote-section blockquote {
+      font-size: 1.3rem;
+      font-style: italic;
+      border-left: 6px solid #6c63ff;
+      padding-left: 25px;
+      color: #444;
+    }
+
+    /* Founder section */
+    .founder-section {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 40px;
+      margin-bottom: 100px;
+    }
+    .founder-text {
+      flex: 1;
+      min-width: 300px;
+    }
+    .founder-text h2 {
+      font-size: 1.9rem;
+      color: #2a2a2a;
+      margin-bottom: 18px;
+    }
+    .founder-text p {
+      font-size: 1rem;
+      color: #444;
+      margin-bottom: 14px;
+    }
+    .founder-img {
+      flex: 1;
+      min-width: 300px;
+    }
+
+    @media (max-width: 900px) {
+      .split-section, .founder-section {
+        flex-direction: column-reverse;
+      }
+      .hero {
+        height: 300px;
+        padding: 0 20px;
+      }
+      .hero-content h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <!-- Navbar -->
+    <header class="navbar">
+      <div class="logo">MediLocator</div>
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About Us</a>
+     
+        {% comment %} <a href="/contact">Contact</a> {% endcomment %}
+      </nav>
+      {% comment %} <a href="/get-started" class="btn-getstarted">Get Started</a> {% endcomment %}
+    </header>
+
+    <!-- Hero Section Full Cover -->
+    <section class="hero">
+      <div class="hero-content">
+        <h1>About Us</h1>
+        <h1>Your health, just a tap away</h1>
+        <p>Connecting you with pharmacies, medicine availability, and emergency support — all in real time.</p>
+        {% comment %} <a href="/services" class="btn-cta">Explore Services</a> {% endcomment %}
+      </div>
+    </section>
+
+    <div class="container">
+      <!-- Services / Features -->
+      <section class="services-cards">
+        <div class="service-card">
+          <div class="icon">📍</div>
+          <h3>Locate Pharmacies</h3>
+          <p>See trusted pharmacies near you with address and distance.</p>
+        </div>
+        <div class="service-card">
+          <div class="icon">💊</div>
+          <h3>Medicine Search</h3>
+          <p>Check stock status of medicines in nearby pharmacies.</p>
+        </div>
+        <div class="service-card">
+          <div class="icon">🚑</div>
+          <h3>Emergency Support</h3>
+          <p>Find clinics, blood banks, and urgent services around you.</p>
+        </div>
+      </section>
+
+      <!-- Mission / Story -->
+      <section class="split-section">
+        <div class="split-text">
+          <h2>Our Mission & Vision</h2>
+          <p>We want to make healthcare instantly accessible via technology. No more guesswork — know where help is.</p>
+          <p>From medicine lookups to urgent care locators, we believe in empowering communities with health at their fingertips.</p>
+          <a href="/services" class="btn-secondary">See Our Services</a>
+        </div>
+        <div class="split-img">
+          <img src="{% static 'medi_app/images/download12.jpeg' %}" alt="Mission & Vision">
+        </div>
+      </section>
+
+      <!-- Stats -->
+      <section class="stats-grid">
+        <div class="stat-card">
+          <div class="num">500+</div>
+          <div class="label">Verified Pharmacies</div>
+        </div>
+        <div class="stat-card">
+          <div class="num">10,000+</div>
+          <div class="label">Medicines Tracked</div>
+        </div>
+        <div class="stat-card">
+          <div class="num">24/7</div>
+          <div class="label">Operational Support</div>
+        </div>
+      </section>
+
+      <!-- Quote -->
+      <section class="quote-section">
+        <blockquote>
+          “In emergencies, every second counts. MediLocator ensures help is just a tap away.”
+        </blockquote>
+      </section>
+
+      <!-- Founder -->
+      <section class="founder-section">
+        <div class="founder-img">
+          <img src="{% static 'medi_app/images/copy.jpeg' %}" alt="Founder Photo">
+        </div>
+        <div class="founder-text">
+          <h2>Meet the Founder</h2>
+          <p>I’m <strong>Sheetal Singh</strong>, a full-stack developer turned health-tech enthusiast. I built MediLocator to bring medical access closer to communities.</p>
+          <p>💡 Passionate about solving real problems <br> 💡 Full implementation from front-end to backend <br> 💡 User-centric, location-first design</p>
+        </div>
+      </section>
+    </div>
+
+    {% include 'medi_app/common/footer.html' %}
+  </div>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Medicine Request</title>
+    {% include 'medi_app/common/common_css.html' %}
+    <style>
+      body, html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        font-family: sans-serif;
+        background: url("{% static 'medi_app/images/l.jpeg' %}") no-repeat center center fixed;
+        background-size: cover;
+      }
+
+      .feedback-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        background: rgba(0, 0, 0, 0.3);
+      }
+
+      .medicine-table {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 8px;
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+        padding: 20px;
+        width: 100%;
+        max-width: 900px;
+      }
+
+      .navbar-spacer {
+        padding-top: 70px; /* adjust if navbar height is different */
+      }
+
+      .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 40px;
+      background: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    .navbar .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #2a2a2a;
+    }
+    .navbar nav {
+      display: flex;
+      gap: 28px;
+    }
+    .navbar nav a {
+      font-size: 1rem;
+      color: #444;
+      padding: 8px 0;
+      transition: color 0.2s;
+    }
+    .navbar nav a:hover {
+      color: #6c63ff;
+    }
+    </style>
+  </head>
+  <body>
+    <!-- Header / Navbar -->
+       <header class="navbar">
+      <div class="logo">MediLocator</div>
+      <nav>
+            <a class="nav-link active" aria-current="page" href="/shop_detail/">Add Shop details</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="/view_medicine/">View medicine request</a>
+                </li>
+                    <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="/owner_edit_profile/">edit profile</a>
+                </li>
+                <li class="nav-item">
+ <a class="nav-link active" aria-current="page" href="/owner_logout/">Logout</a>
+                </li>
+              
+
+
+
+  
+      </nav>
+     
+    </header>
+
+
+    <div class="navbar-spacer"></div>
+
+    <div class="main-div">
+      {% if medicine_detail %}
+        <div class="feedback-wrapper">
+          <div class="medicine-table">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Email</th>
+                  <th>Whatsapp</th>
+                  <th>Medicine</th>
+                  <th>Refer Doctor</th>
+                  <th>Message</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for r in medicine_detail %}
+                  <tr>
+                    <td>{{ r.user_email }}</td>
+                    <td>{{ r.user_whatsapp }}</td>
+                    <td>{{ r.medicine_name }}</td>
+                    <td>{{ r.refer_doctor_name }}</td>
+                    <td>{{ r.user_message }}</td>
+                    <td>{{ r.medicine_status }}</td>
+                    <td>
+                      <a
+                        href="https://wa.me/+91{{ r.user_whatsapp }}?text="
+                        target="_blank"
+                        class="btn btn-primary btn-sm"
+                      >Chat with Customer</a>
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      {% else %}
+        <div class="feedback-wrapper">
+          <h1 style="color: white; text-align: center;">No medicine request found</h1>
+        </div>
+      {% endif %}
+    </div>
+
+    {% include 'medi_app/common/footer.html' %}
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
